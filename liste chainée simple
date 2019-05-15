@@ -1,0 +1,236 @@
+ #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>  
+    struct element{
+        int cin;
+        char nom [100];   
+        struct element *suivant;
+    };
+    typedef struct element  l;
+    
+   
+   
+    
+    
+    l * initialisation(l *L) {
+       
+        L = (l*) malloc(sizeof(l)); 
+       
+        L  = NULL;
+        
+       
+        return (L);
+    };
+     void affiche (l *L) {
+        l *E;
+       
+     
+        E=L;
+         
+        while(E){
+            puts("*****************************");
+            printf("%d \n",E->cin);
+            puts(E->nom);
+          
+            E=E->suivant;
+        } ;
+    }
+   
+    /*******************************/
+    
+    int Recherche (l *L ,int x) {
+        l *E; 
+        E=L ; 
+        while(E){
+            if(x == E->cin )
+                return(1);
+        E=E->suivant;    
+        };
+        return (0);
+    }
+   /*************************************************************/
+    l* supprimer(l *L) {
+        l *E;  
+        l *d;
+        E=L; 
+        int rech;
+        do{
+        printf("donner cin ");
+        scanf("%d",&rech);
+        }while (Recherche(L,rech) == 0);
+        if (E->cin == rech)
+        {
+            L  = E->suivant; 
+            return (L);
+        }
+         
+        if (E == NULL)
+        {
+        return (L);
+        }else
+        {
+         d=E->suivant;
+         while( d!= NULL)
+            {
+            if(d->cin == rech)
+            {
+                E->suivant = d->suivant;
+                free(d);
+                return (L);
+            }
+            E =d ;
+            d= d->suivant ;
+            }  
+        }
+        
+    return (L);
+     
+ }      
+    /*********************************************************/
+    void Modification (l *L ) {
+         
+        l *E; 
+        E=L ; 
+        int bb;
+        do{
+        printf("donner cin ");
+        scanf("%d",&bb);
+        }while (Recherche (L,bb) == 0);
+        while(E)
+            {
+            if(bb == E->cin )
+            {
+                 
+         
+        
+        
+        char nom[100];
+        printf("Saisir nom : ");
+        scanf("%s",&nom); 
+        
+     
+        
+        E->cin=bb; 
+        strcpy(E->nom,nom); 
+        
+            }    
+        E=E->suivant;    
+        };
+         
+    }
+    /*********************************************/
+    
+     l* ajout(l *L) {
+        
+        int c;
+        l * a;
+        a=L;
+        do{
+        printf("\nSaisir cin : ");
+        scanf("%d",&c);   
+        }while( Recherche (L,c) == 1);
+          
+        
+        char nom[100];
+        printf("Saisir nom : ");
+        scanf("%s",&nom); 
+        
+        
+         
+         
+        
+        l* Elem= (l*) malloc(sizeof(l));
+       if(Elem==NULL) {
+            printf("ERREUR MEMOIRE");
+            exit(-1);
+        }
+        
+        
+        Elem->cin=c; 
+        strcpy(Elem->nom,nom); 
+        
+        
+        if(L == NULL) {
+         Elem->suivant=L;    
+        L=Elem; 
+       } else {
+            
+            Elem->suivant = L;
+            
+           
+            L=Elem;
+           
+        }
+       
+       
+       return (L);
+    }
+
+int main(int argc, char** argv) {
+    
+    l *L; 
+    L=initialisation(L); 
+    int n,g, x, f,i,w,p;
+
+do{     
+     
+printf(" 1:  Ajouter Un Etudiant dans une liste\t|*|\n");  
+printf(" 2:  recherche Un Etudiant dans une liste\t|*|\n");  
+printf(" 3:  supprimer Un Etudiant dans une liste\t|*|\n");  
+printf(" 4:  Modifier Un Etudiant dans une liste\t|*|\n");  
+printf(" 5:  afficher tous les Etudiants dans une liste|*|\n");    
+do {
+printf("saisire votre chiox");
+scanf("%d",&n);
+}while (n >6 || n<=0);   
+if(n == 3){L=supprimer(L);}
+    if(n == 4)
+    {
+        
+        Modification(L);
+    }
+ 
+
+
+    if(n == 2)
+    {
+        
+        printf("saisire cin ");
+        scanf("%d",&x);
+        if ( Recherche(L,x) ) 
+        {
+            printf("valider\n");
+        }
+        else
+        { 
+            printf("non valider\n");
+        }
+    }
+
+if(n == 1)
+{
+       printf("saisire nombre de etudiant "); 
+       do 
+       {
+           scanf("%d",&f);
+       }
+       while (f<0);
+       for(int i=0; i<f;i++)
+       {
+        L=ajout (L); 
+       }
+    } 
+ 
+
+    if(n == 5)
+    {
+        affiche (L); 
+    }
+
+
+printf("entrer 0 pour repeter");
+scanf("%d",&w);
+} while (w == 0);
+    return (EXIT_SUCCESS);
+}
+
