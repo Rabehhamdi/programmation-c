@@ -1,0 +1,634 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/* 
+ * File:   main.cpp
+ * Author: rabeh
+ *
+ * Created on 11 janvier 2019, 17:54
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h> 
+    struct element{
+        int cin;
+        char nom[40]; 
+        char prenom[40]; 
+        char classe[40];
+        float moyenne;
+        struct element *suivant;
+        struct element *precedent;
+    };
+    typedef struct element Element;
+    
+   
+   /********************************/
+    struct liste {
+        Element *p;
+        Element *dernier;
+        int nbElem;
+    };
+    typedef struct liste Liste;
+   
+    /*******************************/
+   
+    Liste * initListe(Liste *L) {
+        L = (Liste*) malloc(sizeof(Liste));
+        L->p = (Element*) malloc(sizeof(Element));
+        L->dernier = (Element*) malloc(sizeof(Element));
+       
+        L->p = NULL;
+        L->dernier = NULL;
+        L->nbElem = 0;
+       
+        return (L);
+    };
+   
+    /*******************************/
+  
+    
+    int RechercheListe(Liste *L ,int x) {
+        Element *E; 
+        E=L->p; 
+        while(E){
+            if(x == E->cin )
+                return(1);
+        E=E->suivant;    
+        };
+        return (0);
+    }
+     
+      /*******************************/
+    
+    Liste* ajoutElem(Liste *L) {
+        
+        int c;
+        do{
+        printf("\nSaisir cin : ");
+        scanf("%d",&c);   
+        }while( RechercheListe(L,c) == 1);
+          
+        
+        char ch[40];
+        printf("Saisir nom : ");
+        scanf("%s",&ch);
+        int n = strlen(ch);
+        
+        char ch2[40];
+        printf("Saisir prenom : ");
+        scanf("%s",&ch2);
+        int n2 = strlen(ch2);
+        
+        char ch3[40];
+        printf("Saisir classe : ");
+        scanf("%s",&ch3);
+        int n3 = strlen(ch3);
+        
+        
+        
+        float m;
+        do{
+        printf("Saisir moyenne : ");
+        scanf("%f",&m);
+        }while( m>20 || m<0);
+         
+        
+        Element* NewElem= (Element*) malloc(sizeof(Element));
+       if(NewElem==NULL) {
+            printf("ERREUR MEMOIRE");
+            exit(-1);
+        }
+        
+        
+        NewElem->cin=c;
+        NewElem->moyenne=m;
+        strcpy(NewElem->nom,ch);
+        strcpy(NewElem->prenom,ch2);
+        strcpy(NewElem->classe,ch3);
+        
+        
+        if(L->p == NULL) {
+         NewElem->suivant=NULL;    
+         NewElem->precedent=NULL;   
+        L->p=NewElem;
+            L->dernier = NewElem;
+            L->nbElem ++;
+       } else {
+            L->dernier->suivant = NewElem;
+            NewElem->suivant = NULL;
+             NewElem->precedent = L->dernier;
+            L->dernier = NewElem;
+            L->nbElem ++;
+           
+        }
+       
+       
+       return (L);
+    }
+   
+   
+    void afficheListe(Liste *L) {
+        Element *E;
+       
+     
+        E=L->p;
+         
+        while(E){
+            puts("*****************************");
+            printf("%d \n",E->cin);
+            puts(E->nom);
+            puts(E->prenom);
+            puts(E->classe);
+            printf("%f \n",E->moyenne);
+            E=E->suivant;
+        } ;
+    }
+   
+  
+   /*************************************************************/
+    void ModificationListe(Liste *L ) {
+         
+        Element *E; 
+        E=L->p; 
+        int bb;
+        do{
+        printf("donner cin ");
+        scanf("%d",&bb);
+        }while (RechercheListe(L,bb) == 0);
+        while(E)
+            {
+            if(bb == E->cin )
+            {
+                 
+         
+        
+        
+        char ch[40];
+        printf("Saisir nom : ");
+        scanf("%s",&ch);
+        int n = strlen(ch);
+        
+        char ch2[40];
+        printf("Saisir prenom : ");
+        scanf("%s",&ch2);
+        int n2 = strlen(ch2);
+        
+        char ch3[40];
+        printf("Saisir classe : ");
+        scanf("%s",&ch3);
+        int n3 = strlen(ch3);
+        
+        
+        
+        float m;
+        do{
+        printf("Saisir moyenne : ");
+        scanf("%f",&m);
+        }while( m>20 || m<0);
+        
+        E->cin=bb;
+        E->moyenne=m;
+        strcpy(E->nom,ch);
+        strcpy(E->prenom,ch2);
+        strcpy(E->classe,ch3);
+        
+            }    
+        E=E->suivant;    
+        };
+         
+    }
+    /*********************************************/
+
+Liste* supprimerElement(Liste *L) {
+        Element *E;  
+        Element *d;
+        E=L->p; 
+        int bb;
+        do{
+        printf("donner cin ");
+        scanf("%d",&bb);
+        }while (RechercheListe(L,bb) == 0);
+        if (E->cin == bb)
+        {
+            L->p = E->suivant; 
+            L->nbElem=L->nbElem -1 ;
+            return (L);
+        }
+         
+        if (E == NULL)
+        {
+        return (L);
+        }else
+        {
+         d=E->suivant;
+         while( d!= NULL)
+            {
+            if(d->cin == bb)
+            {
+                E->suivant = d->suivant;
+                L->nbElem=L->nbElem -1 ;
+                free(d);
+                return (L);
+            }
+            E =d ;
+            d= d->suivant ;
+            }  
+        }
+        
+    return (L);
+     
+ }      
+
+   /*********************************************/
+    /*********************************************/
+
+Liste* supprimerElementposition(Liste *L) {
+        Element *E;  
+        E=L->p; 
+        int pos;
+        do{
+        printf("donner position ");
+        scanf("%d",&pos);
+        }while ( L->nbElem < pos);
+        if ( pos==1)
+        {
+            L->p = E->suivant; 
+            L->nbElem=L->nbElem - 1;
+            return (L);
+        }
+         
+        if (E == NULL)
+        {
+        return (L);
+        }else
+        { 
+            if(pos == L->nbElem)
+            {
+                L->dernier->precedent->suivant=NULL;
+                L->nbElem=L->nbElem - 1;
+            }else
+            { 
+                for (int i=1;i<pos;i++)
+                {
+                    E=E->suivant;
+                }  
+                E->precedent->suivant=E->suivant;
+                E->suivant->precedent=E->precedent;
+                 L->nbElem=L->nbElem - 1;
+                free(E); 
+            }
+        }
+    return (L);
+     
+ } 
+/***************************************************/
+    void ajouterEtudiantfiel (Liste *L)
+{
+    FILE *f;
+    int num;
+    f=fopen("etudiant.txt","a");
+    Element *E;
+    E=L->p;
+    while ( E)
+    { 
+    fprintf(f,"%d\t%s\t%s\t%s\t%f\n",E->cin,E->nom,E->prenom,E->classe,E->moyenne); 
+    E=E->suivant;
+    }
+fclose(f);    
+}
+    /*********************************************/
+     
+    /*********************************************/
+    
+void affichert()
+{
+    FILE*f;
+    int caractereActuel = 0;
+    f=fopen("etudiant.txt","r");
+    printf("la liste des etudiants est ; \n\n");
+    printf("cin \tNom \tprenom \tclasse \t moyenne\n");
+     
+         do
+        {
+            caractereActuel = fgetc(f);  
+            printf("%c", caractereActuel);  
+        } while (caractereActuel != EOF);
+        
+    fclose(f);
+}
+    
+    /*********************************************/
+ 
+/*********************************************/
+ int rech(int numrech )
+{
+    FILE *f;
+    Element etud;
+     
+    
+    f=fopen("etudiant.txt","r");
+    do{
+        fscanf(f,"%d\t%s\t%s\t%s\t%f\n",&etud.cin,&etud.nom,&etud.prenom,&etud.classe,&etud.moyenne); 
+        if(etud.cin == numrech)
+        {
+            
+            
+            fclose(f);
+            return 1;
+        }
+    }while(!feof(f));
+    fclose(f);
+    return -1;
+}  
+/***********************************************/
+ void recherche()
+{
+
+    int numr , x;
+    x=0;
+    Element etud;
+    printf("entrer le numero d'etudiant a recherche\n");
+    scanf("%d",&numr);
+    FILE *f;
+    f=fopen ("etudiant.txt" ,"r");
+    do
+    {
+        fscanf(f,"%d\t%s\t%s\t%s\t%f\n",&etud.cin,&etud.nom,&etud.prenom,&etud.classe,&etud.moyenne); 
+        if(etud.cin == numr)
+        {  x=1;
+            printf("---information sur l'etudiant---\n");
+            printf("cin \t%d\n",etud.cin);
+            printf("nom \t%s\n",etud.nom);
+            printf("prenom \t%s\n",etud.prenom);
+            printf("classe \t%s\n",etud.classe);
+            printf("moyenne \t%f\n",etud.moyenne);
+        }
+    }while(!feof(f));
+    if(x == 0)
+        printf("invalide\n");
+    fclose(f);
+}
+ /***********************************************/
+void Modifieretudiant()
+{
+    FILE *f , *fich;
+    int num,i;
+    Element etud;
+    int rep;
+    printf("/n entre le numéro de l'etudiant a modifier:" );
+    scanf("%d",&num); 
+    if(rech(num)==1)
+    {
+        printf ("\n voulez vous vraimment modifier yes ==1 / no == 0");
+        scanf("%d",&rep);  
+        if(  rep == 1 )
+        {
+            f=fopen("etudiant.txt","r");
+            fich=fopen("tempetudiants.txt","a");
+            do
+            {
+            fscanf(f,"%d\t%s\t%s\t%s\t%f\n",&etud.cin,&etud.nom,&etud.prenom,&etud.classe,&etud.moyenne);
+            if(num == etud.cin)
+            {
+                 
+                printf("donner nom \n");
+                scanf("%s",&etud.nom);
+                printf("donner votre prenom \n");
+                scanf("%s",&etud.prenom);
+                printf("donner classe \n");
+                scanf("%s",&etud.classe);
+                printf("donner moyenne \n");
+                scanf("%s",&etud.moyenne);
+                printf("/n la modification a reussi:/n");           
+            }
+            fprintf(fich,"%d\t%s\t%s\t%s\t%f\n",etud.cin,etud.nom,etud.prenom,etud.classe,etud.moyenne);
+
+            }while(!feof(f));
+            fclose(f);
+            fclose(fich);
+            remove ("etudiant.txt");
+            rename("tempetudiants.txt","etudiant.txt");
+            printf("\n la modification a reussi");
+        }
+        else
+        {
+            printf("\n la modification a ete anuule\n\n");
+        }
+    }
+    else
+    {
+        printf("\n ce numero d'etudiant nexiste pas \n\n");
+    }
+        
+}
+/****************************************************/
+void supprimeretudiant()
+{
+    int rep;
+    int numrech;
+    Element etud;
+    printf("entre le numero d'etudiant a supprimer:\t");
+    scanf("%d",&numrech); 
+    if(rech(numrech)==1)
+    {
+        printf("\n vouler vou vraimment supprimer o/n yes== 1 || no == 0?");
+        scanf("%d",&rep); 
+        if(rep == 1  )
+        {
+            FILE* fich ,*f;
+            f=fopen("etudiant.txt","r");
+            fich = fopen("temetudiant.txt","a");
+            do
+            {
+                fscanf(f,"%d\t%s\t%s\t%s\t%f\n",&etud.cin,&etud.nom,&etud.prenom,&etud.classe,&etud.moyenne);
+                if(numrech != etud.cin)
+                {
+                    fprintf(fich,"%d\t%s\t%s\t%s\t%f\n",etud.cin,etud.nom,etud.prenom,etud.classe,etud.moyenne);
+
+                }
+            }while(!feof(f));
+            fclose(fich);
+            fclose(f);
+            remove ("etudiant.txt");
+            rename("temetudiant.txt","etudiant.txt");
+            printf("supprimer avec succes\n");
+        }
+    }else
+    {
+        printf("\n Ce numero d'etudiant n'exisite Pas");
+    }
+
+}
+/****************************************************/
+
+    int main(int argc, char** argv) {
+    
+    Liste *L;
+   
+    L=initListe(L);  
+  
+   /*
+   L=ajoutElem(L); 
+   
+    afficheListe(L); 
+    */ 
+int s;    
+int n,aa;
+int g;
+int x,xx;
+int f; 
+int i,w,p;
+int numrech;
+
+do{     
+    printf("------------------------MENU----------------------------------\n");
+printf("                        ****\n");
+printf("**** traitement dans une liste ****\n");
+printf("|*|  \t    1:  Ajouter Un Etudiant dans une liste\t|*|\n");  
+printf("|*|  \t    2:  recherche Un Etudiant dans une liste\t|*|\n");  
+printf("|*|  \t    3:  supprimer Un Etudiant dans une liste\t|*|\n");  
+printf("|*|  \t    4:  Modifier Un Etudiant dans une liste\t|*|\n");  
+printf("|*|  \t    5:  afficher tous les Etudiants dans une liste|*|\n");  
+printf("**************************************************************************\n");
+printf("**** traitement dans une fichier ****\n");
+printf("|*|  \t    6:  Ajouter la liste dans un fichier\t|*|\n");  
+printf("|*|  \t    7:  recherche Un Etudiant dans un fichier\t|*|\n");  
+printf("|*|  \t    8:  supprimer Un Etudiant dans un fichier\t|*|\n");  
+printf("|*|  \t    9:  Modifier Un Etudiant dans un fichier \t|*|\n");  
+printf("|*|  \t    10: afficher tous les Etudiants dans fichier|*|\n");  
+printf("**************************************************************************\n");
+printf("|*|  \t    0:  EXIT\t\t\t\t\t |*|\n");
+printf("|*||*||*||*||*||*||*||*||*||*||*||*||*||*||*||*||*||*||*||*||*||*||*||*||*||*|\n\n");
+
+
+    
+    
+    
+do {
+    printf("\ndonner votre chiox");
+scanf("%d",&n);
+}while (n >12 || n<0);  
+  
+if(n == 0){ return (-1);}
+if(n == 8)
+{
+supprimeretudiant();
+}
+if( n == 3)
+{
+    if(L->nbElem != 0)
+    { 
+     
+    printf("\nsi tu peut supprimer un etudiant avec num de cin entre 1");
+    printf("\nsi tu peut supprimer un etudiant avec position x entre 2");
+    printf("\ndonner votre chiox\t");
+    do{
+       scanf("%d",&s);
+    }while(s < 0  || s > 3);
+    
+    if(s ==1) 
+    {L=supprimerElement(L);}
+        else 
+    {L=supprimerElementposition(L);}
+    
+    }else{ printf("\nvotre liste est vide\n");} 
+}
+if( n == 9)
+{
+    Modifieretudiant();
+}
+if(n == 10 )
+{
+affichert();
+}
+
+if( n == 7)
+{
+recherche();
+
+
+}
+
+if( n == 6)
+{
+    ajouterEtudiantfiel(L);
+}
+
+
+    if(n == 4)
+    {
+        
+        ModificationListe(L);
+    }
+ 
+
+
+    if(n == 2)
+    {
+        
+        printf("donner cin ");
+        scanf("%d",&x);
+        if ( RechercheListe(L,x) ) 
+        {
+            printf("valider\n");
+        }
+        else
+        { 
+            printf("non valider\n");
+        }
+    }
+
+if(n == 1)
+{
+    
+    printf("si tu peut saisire un nombre fini de etudiant entrer \t'1'\n");
+    printf("si tu peut saisire un nombre infini de etudiant entrer\t '2'\n");
+    
+    do{
+        scanf("%d",&g);
+    }while(g < 0  || g > 3);
+    
+    if(g== 1)
+    {
+       
+       printf("donner nombre de etudiant "); 
+       do 
+       {
+           scanf("%d",&f);
+       }
+       while (f<0);
+       for(int i=0; i<f;i++)
+       {
+        L=ajoutElem(L);
+        printf("\t\t************");
+       }
+    } 
+    else
+    {
+        
+        do
+        {
+        L=ajoutElem(L);
+        printf("enter 0 pour sortire\t");
+        scanf("%d",&i);
+        }while(i != 0);
+    }
+}
+    if(n == 5)
+    {
+        afficheListe(L); 
+    }
+
+
+printf("entrer 0 pour repeter");
+scanf("%d",&w);
+} while (w == 0);
+  
+    return (EXIT_SUCCESS);
+}
+
+
